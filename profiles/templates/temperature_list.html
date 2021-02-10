@@ -1,0 +1,208 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>DesignHub</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+    integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="page-header-left">
+                    <h3>Visitors List
+                      
+                    </h3>
+                    <small><a class="add-new" href="{% url 'profiles:register_visitor' %}">Add new visitor</a></small> <br>
+                    <small><a class="add-new" href="{% url 'profiles:add_temperature' %}">Update temperature</a></small>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <ol class="breadcrumb float-right">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}"><i data-feather="home"></i></a></li>
+                    <li class="breadcrumb-item">Design Hub</li>
+                    <li class="breadcrumb-item active">visitors List</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+  <div id="toolbar">
+  
+    <button id="remove" class="btn btn-danger" title="Delete" >
+      <i class=""> Delete</i> 
+    </button>
+    
+   
+  </div>
+  <table data-toggle="table"
+   id="table"
+   data-toolbar="#toolbar"
+   data-search="true" 
+   data-show-refresh="true"
+   data-show-toggle="true"
+   data-show-fullscreen="true" 
+   data-show-columns="true"
+   data-show-columns-toggle-all="true"
+   data-detail-view="true"
+   data-show-export="true"
+   data-click-to-select="true"
+   
+   data-minimum-count-columns="2"
+   data-show-pagination-switch="true" 
+   data-pagination="true" 
+   data-id-field="id"
+   data-page-list="[10, 25, 50, 100, all]"
+   data-show-footer="true" 
+   data-response-handler="responseHandler">
+    
+    <thead>
+      <tr>
+        <th data-field="state" data-checkbox="true"></th>
+        
+        <th>Visitor's Name</th>
+        <th>Temperature</th>
+        <th>Company Name</th>
+        <th>Id No</th>
+        <th>Tel Number</th>
+        <th>Date</th>
+        
+        
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for temperature in temperaturerecord %}
+      <tr>
+
+        <td>{{temperature.profile.state}}</td>
+        <td>{{temperature.profile.name}}</td>
+        <td>{{temperature.temperature}}</td>
+        <td>{{temperature.profile.company_name}}</td>
+        <td>{{temperature.profile.id_no}}</td>
+        <td>{{temperature.profile.tel_number}}</td>
+        <td>{{temperature.profile.date}}</td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+
+  <!--Js Starts here-->
+  <script>
+    var $table = $('#table')
+     var $remove = $('#remove')
+    
+     var selections = []
+   
+     function getIdSelections() {
+       return $.map($table.bootstrapTable('getSelections'), function (row) {
+         return row.id
+       })
+     }
+   
+     function responseHandler(res) {
+       $.each(res.rows, function (i, row) {
+         row.state = $.inArray(row.id, selections) !== -1
+       })
+       return res
+     }
+
+   
+     window.operateEvents = {
+       'click .Detail': function (e, value, row, index) {
+         //try
+         $('#my_modal').on('show.bs.modal', function(e) {
+   
+          //get data-id attribute of the clicked element
+   var bookId = $(e.relatedTarget).data('book-id');
+   
+   //populate the textbox
+   $(e.currentTarget).find('input[name="bookId"]').val(bookId);
+   });
+       
+         
+         $('#detailsModel').modal('show');
+       
+         console.log(row.user);
+         
+       },
+       'click .Edit': function (e, value, row, index) {
+         window.location.href ="/openmarket/"+row.id+"/edit";
+   
+         
+       },
+     }
+   
+     ///used cookies to get crsf token
+     function getCookie(c_name)
+       {
+         if (document.cookie.length > 0)
+           {
+             c_start = document.cookie.indexOf(c_name + "=");
+               if (c_start != -1)
+            {
+               c_start = c_start + c_name.length + 1;
+               c_end = document.cookie.indexOf(";", c_start);
+               if (c_end == -1) c_end = document.cookie.length;
+               return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+         return "";
+      }
+   
+      $table.on('check.bs.table uncheck.bs.table ' +
+      'check-all.bs.table uncheck-all.bs.table',
+    function () {
+      $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)
+
+      // save your data, here just save the current page
+      selections = getIdSelections()
+      // push or splice the selections if you want to save all data selections
+    })
+    $table.on('all.bs.table', function (e, name, args) {
+      console.log(name, args)
+    })
+    $remove.click(function () {
+      var ids = getIdSelections()
+      $table.bootstrapTable('remove', {
+        field: 'id',
+        values: ids
+      })
+      $remove.prop('disabled', true)
+    })
+  
+
+  $(function() {
+    initTable()
+
+    $('#locale').change(initTable)
+  })
+    
+    </script>
+     
+</body>
+
+</html>
