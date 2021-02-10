@@ -6,10 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.urls import reverse_lazy
 from .forms import ProfileForm,TemperatureForm
 from .models import profiles, Temperature
-from rest_framework import viewsets
-from rest_framework import permissions
-from rest_framework.response import Response
-from rest_framework import filters
+
 
 
 
